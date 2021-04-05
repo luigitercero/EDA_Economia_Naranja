@@ -1,0 +1,69 @@
+---
+title: "Economia Naranja"
+output: html_document
+---
+
+## library
+```
+dplyr
+ggplot2
+knitr
+plotly
+plyr
+rmarkdown
+
+```
+
+```{r}
+orangeec <- read.csv('/home/luigitercero/Downloads/orangeec.csv')
+data(orangeec)
+summary(orangeec)
+```
+
+```{r}
+pairs(orangeec[,6:10])
+```
+
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+ggplot(orangeec, aes(x=Internet.penetration...population))+geom_histogram(
+  fill="red", color="yellow", binwidth = 5)+
+  labs(x="Penetracion de internet en % poblacion", y="Cantidad de paises",
+       title = "Penetracion de internet en paises latam")+
+  theme(legend.position = "none")+
+  theme(panel.background = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+  xlim(30, 100)+ ylim(0, 4)+
+  scale_x_continuous(breaks = seq(30, 100, by=5))
+```
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+economy <- mean(orangeec$GDP.PC)
+economy
+```
+```{r}
+orangeec<-orangeec%>%
+  mutate(Strong_economy=ifelse(GDP.PC<economy,
+                               "Por debajo de promedio pib per cápita",
+                               "sobre arriva promedio pib per capita"))
+```
+
+```{r}
+ggplot(orangeec, aes(x=Strong_economy, y=Creat.Ind...GDP,
+                     fill=Strong_economy))+
+  geom_boxplot(alpha=0.4)+
+  labs(x="Tipo de pais", y="Aporte economia naranjaal pib",
+       title = "Aporte economia naranja en pib paises latam con alto y bajo pib per capita")+
+  
+  theme(legend.position = "none")+
+  theme(panel.background = element_blank(),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())
+```
